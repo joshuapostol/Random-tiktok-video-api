@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      overflow: auto;
+      background-color: #1f1f1f;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+  }
+
+  .container {
+      max-width: 400px;
+      padding: 30px;
+      background-color: #333;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      text-align: left;
+  }
+
+  label {
+      display: block;
+      margin-bottom: 10px;
+  }
+
+  input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #666;
+      border-radius: 4px;
+      background-color: #444;
+      color: #fff;
+  }
+
+  .submit-button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: block;
+      margin: 0 auto;
+  }
+
+  .submit-button:hover {
+      background-color: #0056b3;
+  }
+
+  .error-message {
+      color: #ff0000;
+      margin-top: 10px;
+      text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1 style="text-align: center;">Admin Panel - GirlEdit</h1>
+  <form id="linkForm">
+    <label for="link">Enter TikTok Video Link:</label>
+    <input type="text" id="link" name="link" placeholder="https://www.tiktok.com/...">
+    <br>
+    <button type="button" class="submit-button" onclick="addLink()">Submit</button>
+    <div id="errorMessage" class="error-message"></div>
+  </form>
+</div>
+
+<script>
+  async function addLink() {
+    const linkInput = document.getElementById("link");
+    const link = linkInput.value;
+    const errorMessage = document.getElementById("errorMessage");
+    
+    if (!link.startsWith("https://www.tiktok.com/") && !link.startsWith("https://vt.tiktok.com/")) {
+      errorMessage.textContent = "Invalid or missing link parameter";
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/add/girl', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }, 
+        body: JSON.stringify({ link: link, uid: "61554201747411"})
+      });
+
+      const data = await response.json();
+      alert(`${data.message}\nLink: ${link}`);
+    } catch (error) {
+      console.error("Error:", error);
+      errorMessage.textContent = "An error occurred while adding the link";
+    }
+  }
+</script>
+</body>
+</html>
